@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8" />
+<title>Single font picker as Primary</title>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<style>
+#doubleGoogleFontsPicker{
+	background-color : #f8f8f8;
+	margin-top: 1vh;
+	margin-left: 1vh;
+	padding: 0vh 2vh 2vh 2vh;
+	box-shadow: 0.5vh 0.5vh 0.5vh 0.5vh gray;
+	border-radius: 0.5vh;
+	display: none;
+	position:absolute;
+	width:auto;
+	height:auto;
+	z-index:1000;
+}
+#preview4DGFP{
+	background-color : #ffffff;
+	padding: 0vh 0.5vh 0vh 0.5vh;
+	line-height: 0.8vh;
+	border-width: 1px;
+	border-style: solid;
+	border-color: black;
+}
+.preview4DGFP{
+	margin-top: -0.1vh;
+}
+</style>
+
+</head>
+<body>
+  <div id="origin">
+	<p>Select the Google font as Primary.</p>
+	<p>The target subsets is 'Latin'.</p>
+	<p>After changing font, the specific font will be primary and default font will be secondary.</p>
+	<button id="changeFonts">Change Font</button>
+  </div>
+  <table id="doubleGoogleFontsPicker" style="border:none;" cellpadding="10">
+     <tbody style="border:none;">
+	<tr style="border:none">
+	 <td style="border:none" valign="top">
+	  <p><label>フォント: </label>
+		  <select id="primaryFont4DGFP">
+			<option value="none">Select Font Family</option>
+		  </select>
+	  </p>
+	  <p><label>カテゴリ: </label><br/>
+		  <input type="radio" name="category4DGFP" value="all" checked>All</input>
+	  	  <input type="radio" name="category4DGFP" value="sans-serif">sans-serif</input>
+	  	  <input type="radio" name="category4DGFP" value="serif">serif</input><br/>
+	  	  <input type="radio" name="category4DGFP" value="handwriting">handwriting</input>
+	  	  <input type="radio" name="category4DGFP" value="display">display</input><br/>
+	  	  <input type="radio" name="category4DGFP" value="monospace">monospace</input>
+	  </p>
+	 </td><td style="border:none">
+	  <label>プレビュー: </label>
+	  <div id="preview4DGFP">
+		<p>The popup dialog is coded by a table</p>
+		<p>element. You can change it to any block</p>
+		<p> element except 'form' element.</p>
+		<p>Make sure you need to use the same</p>
+		<p>selector name.</p>
+	  </div>
+	 </td>
+	</tr>
+	<tr style="border:none">
+	 <td style="border:none">
+	  <button id="cancel4DGFP">cancel</button>
+	 </td><td style="border:none">
+	  <button id="submit4DGFP">set</button>
+	 </td>
+	</tr>
+     </tbody>
+  </table>
+
+<script src="../jquery.googleFontsPicker.js"></script>
+<script>
+
+   $(function(){
+	let D=true;
+	$(document).on('click','#changeFonts',function(event){
+		let left = event.clientX;
+		let top  = $(this).offset().top;
+		let defaultFont = $("#origin").css('font-family');
+
+		doubleGoogleFontsPicker(
+			left,
+			top,
+			defaultFont,
+			{
+				sort: 'popularity',
+				primaryFont:{
+					maxmum: 100,
+					subsets: 'latin'
+				},
+				selector:{
+					dialog: '#doubleGoogleFontsPicker',
+					primaryFont: '#primaryFont4DGFP',
+					preview: '#preview4DGFP',
+					category: 'input[name="category4DGFP"]:radio',
+					cancel: '#cancel4DGFP',
+					submit: '#submit4DGFP'
+				}
+			}
+		).then(function(fontFamilyString){
+			$("#origin").css('font-family',fontFamilyString);
+			if(D) console.log($("#origin").css('font-family'));
+		},function(msg){
+			if(msg === 'api-key')	alert('You need your API-Key for Google Fonts API.');
+			if(D) console.log("cancel: " + msg);
+		}).catch(function(error) {
+			if(D) console.log(error);
+		});
+	});
+
+   });
+</script>
+</body>
+</html>

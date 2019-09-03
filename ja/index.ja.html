@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8" />
+<title>Google Fontsによる合成フォント設定</title>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<style>
+#doubleGoogleFontsPicker{
+	background-color : #f8f8f8;
+	margin-top: 1vh;
+	margin-left: 1vh;
+	padding: 0vh 2vh 2vh 2vh;
+	box-shadow: 0.5vh 0.5vh 0.5vh 0.5vh gray;
+	border-radius: 0.5vh;
+	display: none;
+	position:absolute;
+	width:auto;
+	height:auto;
+	z-index:1000;
+}
+#preview4DGFP{
+	background-color : #ffffff;
+	padding: 0vh 0.5vh 0vh 0.5vh;
+	line-height: 0.8vh;
+	border-width: 1px;
+	border-style: solid;
+	border-color: black;
+}
+.preview4DGFP{
+	margin-top: -0.1vh;
+}
+</style>
+
+</head>
+<body>
+  <div id="origin">
+	<p>Google Fontsを利用して、Web上のフォントを変更します。</p>
+	<p>英語フォント、日本語フォントに異なるフォントが指定できます。<p>
+	<button id="changeFonts">フォント変更</button>
+  </div>
+  <div id="doubleGoogleFontsPicker">
+	  <p><label>英文フォント: </label>
+		  <select id="primaryFont4DGFP">
+			<option value="none">フォントを選択してください。</option>
+		  </select>
+	  </p>
+	  <p><label>和文フォント: </label>
+		  <select id="secondaryFont4DGFP">
+			<option value="none">フォントを選択してください。</option>
+		  </select>
+	  </p>
+	  <label>プレビュー: </label>
+	  <div id="preview4DGFP">
+		<p>あいうえおかきくけこさしすせそ</p>
+		<p>アイスエオカキクケコ</p>
+		<p>東京には空が無いという</p>
+		<p>ABCDEFGHIJKLMNOPQRSTU</p>
+		<p>abcdefghijklmnopqrstu</p>
+	  </div>
+	  <p><label>カテゴリ: </label><br/>
+		  <input type="radio" name="category4DGFP" value="all" checked>全て</input>
+	  	  <input type="radio" name="category4DGFP" value="sans-serif">sans-serif</input>
+	  	  <input type="radio" name="category4DGFP" value="serif">serif</input><br/>
+	  	  <input type="radio" name="category4DGFP" value="handwriting">handwriting</input>
+	  	  <input type="radio" name="category4DGFP" value="display">display</input>
+	  	  <input type="radio" name="category4DGFP" value="monospace">monospace</input>
+	  </p>
+	  <button id="cancel4DGFP">キャンセル</button> 
+	  <button id="submit4DGFP">設　定</button>
+  </div>
+
+<script src="jquery.googleFontsPicker.js"></script>
+<script>
+
+   $(function(){
+	let D=true;
+	$(document).on('click','#changeFonts',function(event){
+		let left = event.clientX;
+		let top  = $(this).offset().top;
+		let defaultFont = $("#origin").css('font-family');
+
+		doubleGoogleFontsPicker(
+			left,
+			top,
+			defaultFont,
+			{
+				sort: 'popularity',
+				primaryFont:{
+					subsets: 'latin',
+					maxmum: 100
+				},
+				secondaryFont:{
+					subsets: 'japanese'
+				},
+				selector:{
+					dialog: '#doubleGoogleFontsPicker',
+					primaryFont: '#primaryFont4DGFP',
+					secondaryFont: '#secondaryFont4DGFP',
+					preview: '#preview4DGFP',
+					category: 'input[name="category4DGFP"]:radio',
+					cancel: '#cancel4DGFP',
+					submit: '#submit4DGFP'
+				}
+			}
+		).then(function(fontFamilyString){
+			if(D) console.log(fontFamilyString);
+			$("#origin").css('font-family',fontFamilyString);
+			if(D) console.log($("#origin").css('font-family'));
+		},function(msg){
+			if(msg === 'api-key')	alert('Google Fonts API用のキーが未設定です。');
+			if(D) console.log("キャンセル: " + msg);
+		}).catch(function(error) {
+			if(D) console.log(error);
+		});
+	});
+
+   });
+</script>
+</body>
+</html>

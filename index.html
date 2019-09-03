@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8" />
+<title>Online Google Fonts picker for handling composite fonts</title>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<style>
+#doubleGoogleFontsPicker{
+	background-color : #f8f8f8;
+	margin-top: 1vh;
+	margin-left: 1vh;
+	padding: 0vh 2vh 2vh 2vh;
+	box-shadow: 0.5vh 0.5vh 0.5vh 0.5vh gray;
+	border-radius: 0.5vh;
+	display: none;
+	position:absolute;
+	width:auto;
+	height:auto;
+	z-index:1000;
+}
+#preview4DGFP{
+	background-color : #ffffff;
+	padding: 0vh 0.5vh 0vh 0.5vh;
+	line-height: 0.8vh;
+	border-width: 1px;
+	border-style: solid;
+	border-color: black;
+}
+.preview4DGFP{
+	margin-top: -0.1vh;
+}
+</style>
+
+</head>
+<body>
+  <div id="origin">
+	<p>Googleフォントを使用して、ウェブ上のフォントを変更します。</p>
+	<p>Use Google Fonts to change the font on the web.</p>
+	<p>複合フォントを作成するために、プライマリフォントとセカンダリフォントを選択できます。</p>
+	<p>You can select the primary font and the secondary font for making the composite fonts.<p>
+	<button id="changeFonts">Change Fonts</button>
+  </div>
+  <div id="doubleGoogleFontsPicker">
+	  <p><label>English font: </label>
+		  <select id="primaryFont4DGFP">
+			<option value="none">Select the font!</option>
+		  </select>
+	  </p>
+	  <p><label>Japanese font: </label>
+		  <select id="secondaryFont4DGFP">
+			<option value="none">Select the font!</option>
+		  </select>
+	  </p>
+	  <label>Preview: </label>
+	  <div id="preview4DGFP">
+		<p>あいうえおかきくけこさしすせそ</p>
+		<p>アイスエオカキクケコ</p>
+		<p>東京は世界一安全な都市です。</p>
+		<p>ABCDEFGHIJKLMNOPQRSTU</p>
+		<p>abcdefghijklmnopqrstu</p>
+		<p>Tokyo is the safest city in the world.</p>
+	  </div>
+	  <p><label>Category: </label><br/>
+		  <input type="radio" name="category4DGFP" value="all" checked>All</input>
+	  	  <input type="radio" name="category4DGFP" value="sans-serif">sans-serif</input>
+	  	  <input type="radio" name="category4DGFP" value="serif">serif</input><br/>
+	  	  <input type="radio" name="category4DGFP" value="handwriting">handwriting</input>
+	  	  <input type="radio" name="category4DGFP" value="display">display</input>
+	  	  <input type="radio" name="category4DGFP" value="monospace">monospace</input>
+	  </p>
+	  <button id="cancel4DGFP">Cancel</button> 
+	  <button id="submit4DGFP">Set</button>
+  </div>
+
+<script src="jquery.googleFontsPicker.js"></script>
+<script>
+
+   $(function(){
+	let D=true;
+	$(document).on('click','#changeFonts',function(event){
+		let left = event.clientX;
+		let top  = $(this).offset().top;
+		let defaultFont = $("#origin").css('font-family');
+
+		doubleGoogleFontsPicker(
+			left,
+			top,
+			defaultFont,
+			{
+				sort: 'popularity',
+				primaryFont:{
+					subsets: 'latin',
+					maxmum: 100
+				},
+				secondaryFont:{
+					subsets: 'japanese'
+				},
+				selector:{
+					dialog: '#doubleGoogleFontsPicker',
+					primaryFont: '#primaryFont4DGFP',
+					secondaryFont: '#secondaryFont4DGFP',
+					preview: '#preview4DGFP',
+					category: 'input[name="category4DGFP"]:radio',
+					cancel: '#cancel4DGFP',
+					submit: '#submit4DGFP'
+				}
+			}
+		).then(function(fontFamilyString){
+			if(D) console.log(fontFamilyString);
+			$("#origin").css('font-family',fontFamilyString);
+			if(D) console.log($("#origin").css('font-family'));
+		},function(msg){
+			if(msg === 'api-key')	alert('You need your API-Key for Google Fonts API.');
+			if(D) console.log("cancel!: " + msg);
+		}).catch(function(error) {
+			if(D) console.log(error);
+		});
+	});
+
+   });
+</script>
+</body>
+</html>
